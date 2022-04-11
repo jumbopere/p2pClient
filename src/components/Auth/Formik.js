@@ -6,6 +6,7 @@
      address: yup.string('Enter your address').required("Address is required"),
      city: yup.string('Enter your city').required("City is required"),
      state: yup.string('Enter your State').required("State is required"),
+     gender: yup.string('Choose your Gender').required("Gender is required"),
     email: yup
       .string('Enter your email')
       .email('Enter a valid email')
@@ -18,4 +19,6 @@
         [yup.ref("password"), null],
         "Passwords must match"
       ),
+      activationCode: yup.string('Enter your Activation code').required("Activation code is required"),
+      policy: yup.boolean().oneOf([true], 'This field must be checked')
   });

@@ -1,95 +1,154 @@
-import React, {useState} from 'react';
-import { Paper, Button, Container, Grid, Typography, Box, TextField, Link, CssBaseline, Avatar, FormControlLabel, Checkbox, InputAdornment, IconButton} from "@material-ui/core"
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
+import {useDispatch} from 'react-redux'
+import { Helmet } from 'react-helmet';
+import { useFormik } from 'formik';
+import {
+  Box,
+  Button,
+  Container,
+  Link,
+  TextField,
+  Typography,
+  InputAdornment,
+  IconButton
+} from '@mui/material';
 
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import useStyles from './styles'
+import { validationSchema } from './Formik';
+
 
 const Login = () => {
-    const classes = useStyles();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-    const [showPassword, setShowPassword] = useState(false);
-    const handleShowPassword = () => setShowPassword(!showPassword);
+  const [showPassword, setShowPassword] = useState(false);
+  const handleShowPassword = () => setShowPassword(!showPassword);
+
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      const { email, password, } = values
+    },
+  });
+
   return (
-    <Container component="main" maxWidth="xs">
-    <CssBaseline />
-    <Paper className={classes.paper}>
-      <Avatar className={classes.avatar}>
-        <LockOutlinedIcon />
-      </Avatar>
-      <Typography component="h1" variant="h5">
-        Log in
-      </Typography>
-      <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-
-         
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="Email"
-          name="email"
-          autoComplete="email"
-          autoFocus
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          id="password"
-          autoComplete="current-password"
-          InputProps={{ 
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleShowPassword}
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-      </InputAdornment>
-         )
+    <>
+      <Helmet>
+        <title>Login </title>
+      </Helmet>
+      <Box
+        sx={{
+          backgroundColor: 'background.default',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          justifyContent: 'center'
         }}
-        />
-        <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
-        />
-         </Grid>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
-          Log In
-        </Button>
-        <Grid container>
-          <Grid item xs>
-            <Link href="#" variant="body2">
-              Forgot password?
-            </Link>
-          </Grid>
-          <Grid item>
-            <Link href="#" variant="body2">
-              {"Don't have an account? Sign Up"}
-            </Link>
-          </Grid>
-        </Grid>
-      </form>
-    </Paper>
-  
-  </Container>
-  )
-}
+      >
+        <Container maxWidth="sm">
+
+              <form onSubmit={handleSubmit}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    color="textPrimary"
+                    variant="h2"
+                  >
+                    Sign in
+                  </Typography>
+                </Box>
+                
+                <Box
+                  sx={{
+                    pb: 1,
+                    pt: 3
+                  }}
+                >
+                  <Typography
+                    align="center"
+                    color="textSecondary"
+                    variant="body1"
+                  >
+                    Sign in on the internal platform
+                  </Typography>
+                </Box>
+                <TextField
+                required
+                  error={Boolean(touched.email && errors.email)}
+                  fullWidth
+                  helperText={touched.email && errors.email}
+                  label="Email Address"
+                  margin="normal"
+                  name="email"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="email"
+                  value={values.email}
+                  variant="outlined"
+                  autoComplete='email'
+                />
+                <TextField
+                  error={Boolean(touched.password && errors.password)}
+                  fullWidth
+                  required
+                  helperText={touched.password && errors.password}
+                  label="Password"
+                  margin="normal"
+                  name="password"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type={showPassword ? "text" : "password"}
+                  value={values.password}
+                  variant="outlined"
+                  autoComplete='current-password'
+                  InputProps={{ 
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleShowPassword}
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+              </InputAdornment>
+                 )
+                }}
+                />
+                <Box sx={{ py: 2 }}>
+                  <Button
+                    color="primary"
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                  >
+                   Login
+                  </Button>
+                </Box>
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
+                >
+                  Don&apos;t have an account?
+                  {' '}
+                  <Link
+                    component={RouterLink}
+                    to="/register"
+                    variant="h6"
+                  >
+                   Register
+                  </Link>
+                </Typography>
+              </form>    
+        </Container>
+      </Box>
+    </>
+  );
+};
 
 export default Login

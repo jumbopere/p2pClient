@@ -1,0 +1,6 @@
+export  const LOGIN ="LOGIN"
+export  const REGISTER ="REGISTER"
+export  const ACTIVATE ="ACTIVATE";
+export const LOGOUT="LOGOUT";
+export const USER_SIGNUP_ERRORS= "USER_SIGNUP_ERRORS"
+export const ACTIVATION_FAILURE = "ACTIVATION_FAILURE"

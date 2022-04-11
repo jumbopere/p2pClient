@@ -1,17 +1,21 @@
-import React, {useState} from 'react';
-import { Paper, Button, Container, Grid, Typography, Box, TextField, Link, CssBaseline, Avatar, FormControlLabel, Checkbox, InputAdornment, IconButton} from "@material-ui/core"
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import { useFormik } from 'formik';
 
-import useStyles from './styles';
+
+import React, {useState} from 'react';
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
+import {  Button, Container, Typography, Box, TextField, Link, FormControl,Checkbox, InputAdornment, IconButton, MenuItem, Select,  InputLabel } from "@mui/material"
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useFormik } from 'formik';
+import { Helmet } from 'react-helmet';
+
 import { validationSchema } from './Formik';
+import stateData from '../../stateData';
 
 const Register = () => {
-  const classes = useStyles();
 
-  const [showPassword, setShowPassword] = useState(false);
+
+
+    const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => setShowPassword(!showPassword);
 
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
@@ -24,79 +28,95 @@ const Register = () => {
       state:'',
       city: '',
       address:'',
-      confirmPassword:''
+      confirmPassword:'',
+      gender:"",
+      policy: false
 
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-     
+      const {firstName, lastName, email, password, state, city, address, gender,phoneNumber} = values
     },
   });
 
   return (
-    <Container component="main" maxWidth="xs">
-    <CssBaseline />
-    <Paper className={classes.paper}>
-      <Avatar className={classes.avatar}>
-        <LockOutlinedIcon />
-      </Avatar>
-      <Typography component="h1" variant="h5">
-       Register
-      </Typography>
-      <form className={classes.form} noValidate>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              autoComplete="fname"
-              name="firstName"
-              variant="outlined"
-              required
-              fullWidth
-              id="firstName"
-              label="First Name"
-              autoFocus
-              value={values.firstName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.firstName && Boolean(errors.firstName)}
-                helperText={touched.firstName && errors.firstName}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              id="lastName"
-              label="Last Name"
-              name="lastName"
-              autoComplete="lastName"
-              value={values.lastName}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.lastName && Boolean(errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              type="email"
-              value={values.email}
-               error={touched.email && Boolean(errors.email)}
-          helperText={touched.email && errors.email}
-          onChange={handleChange}
-                onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
+    <>
+      <Helmet>
+        <title>Register </title>
+      </Helmet>
+      <Box
+        sx={{
+          backgroundColor: 'background.default',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          justifyContent: 'center'
+        }}
+      >
+        <Container maxWidth="xs">
+
+    
+              <form onSubmit={handleSubmit}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    color="textPrimary"
+                    variant="h2"
+                  >
+                    Create new account
+                  </Typography>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    variant="body2"
+                  >
+                    Use your email to create new account
+                  </Typography>
+                </Box>
+                <TextField
+                required
+                  error={Boolean(touched.firstName && errors.firstName)}
+                  fullWidth
+                  helperText={touched.firstName && errors.firstName}
+                  label="First name"
+                  margin="normal"
+                  name="firstName"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.firstName}
+                  variant="outlined"
+                  autoComplete='firstname'
+                />
+                <TextField
+                  error={Boolean(touched.lastName && errors.lastName)}
+                  fullWidth
+                  helperText={touched.lastName && errors.lastName}
+                  label="Last name"
+                  margin="normal"
+                  name="lastName"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.lastName}
+                  variant="outlined"
+                  required
+                  autoComplete='lastname'
+                 
+                />
+                <TextField
+                  error={Boolean(touched.email && errors.email)}
+                  fullWidth
+                  helperText={touched.email && errors.email}
+                  label="Email Address"
+                  margin="normal"
+                  name="email"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="email"
+                  value={values.email}
+                  variant="outlined"
+                  required
+                  autoComplete='email'
+                />
+                    <TextField
               variant="outlined"
               type="tel"
               required
@@ -109,11 +129,9 @@ const Register = () => {
               onBlur={handleBlur}
               error={touched.phoneNumber && Boolean(errors.phoneNumber)}
               helperText={touched.phoneNumber && errors.phoneNumber}
-             
+              margin="normal"
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
+              <TextField
               variant="outlined"
               type="text"
               required
@@ -127,73 +145,104 @@ const Register = () => {
               error={touched.address && Boolean(errors.address
                 )}
               helperText={touched.address && errors.address}
+              margin="normal"
              
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              type="text"
-              required
-              fullWidth
-              id="state"
-              label="State"
-              name="state"
-              autoComplete="state"
-              value={values.state}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.state && Boolean(errors.state)}
-              helperText={touched.state && errors.state}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              type="text"
-              required
-              fullWidth
-              id="city"
-              label="City"
-              name="city"
-              autoComplete="city"
-              value={values.city}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.city && Boolean(errors.city)}
-              helperText={touched.city && errors.city}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              id="password"
-              autoComplete="current-password"
-              InputProps={{ 
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleShowPassword}
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-          </InputAdornment>
-             )
-            }}
-            value={values.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.password && Boolean(errors.password)}
-            helperText={touched.password&& errors.password}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
+
+          <FormControl fullWidth required  variant='outlined'  error={touched.state && Boolean(errors.state)} margin='normal'>
+          <InputLabel id="state">State</InputLabel>
+               <Select
+          id="state"
+          labelId='state'
+          label="State"
+          name="state"
+          onBlur={handleBlur}
+          value={values.state}
+          onChange={handleChange}
+        
+        >
+            {stateData.map((state) => (
+            <MenuItem 
+              value={state.state}
+              key={state.alias}
+            >
+              {state.state}
+            </MenuItem>
+          ))}
+          </Select>
+</FormControl>
+         <FormControl fullWidth required  variant='outlined'  error={touched.city && Boolean(errors.city)} margin="normal">
+          <InputLabel id="city">City</InputLabel>
+               <Select
+          id="city"
+          labelId='city'
+          label="City"
+          name="city"
+          value={values.city}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          disabled={!values.state}
+     
+        >
+       {values.state
+            ? stateData
+                .find(({ state }) => state === values.state)
+                .lgas.map((lga) => (
+                  <MenuItem value={lga} key={lga}>
+                    {lga}
+                  </MenuItem>
+                ))
+            : []}
+           
+            
+
+          </Select>
+</FormControl>
+<FormControl fullWidth required  variant='outlined'error={touched.gender && Boolean(errors.gender)} margin="normal">
+           <InputLabel id="gender">Gender</InputLabel>
+           <Select
+         
+          value={values.gender}
+          label="Gender"
+          labelId='gender'
+          onChange={handleChange}
+          onBlur={handleBlur}
+          name='gender'
+          id='gender'
+          
+        >
+          <MenuItem value="Female">Female</MenuItem>
+          <MenuItem value="Male">Male</MenuItem>
+        </Select>
+        </FormControl>
+
+                <TextField
+                  error={Boolean(touched.password && errors.password)}
+                  fullWidth
+                  required
+                  helperText={touched.password && errors.password}
+                  label="Password"
+                  margin="normal"
+                  name="password"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="password"
+                  autoComplete='current-password'
+                  value={values.password}
+                  variant="outlined"
+                  InputProps={{ 
+                                    endAdornment: (
+                                      <InputAdornment position="end">
+                                        <IconButton
+                                          onClick={handleShowPassword}
+                                        >
+                                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                                          </IconButton>
+                              </InputAdornment>
+                                    )
+                                }}
+                />
+              <TextField
               variant="outlined"
               required
               fullWidth
@@ -207,37 +256,74 @@ const Register = () => {
               onBlur={handleBlur}
               error={touched.confirmPassword && Boolean(errors.confirmPassword)}
               helperText={touched.confirmPassword && errors.confirmPassword}
+             margin="normal"
             />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive inspiration, marketing promotions and updates via email."
-            />
-          </Grid>
-        </Grid>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-          onClick={handleSubmit}
-        >
-          Sign Up
-        </Button>
-        <Grid container justifyContent="flex-end">
-          <Grid item>
-            <Link href="#" variant="body2">
-              Already have an account? Sign in
-            </Link>
-          </Grid>
-        </Grid>
-      </form>
-    </Paper>
-  </Container>
-  )
-}
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    ml: -1
+                  }}
+                >
+                  <Checkbox
+                    checked={values.policy}
+                    name="policy"
+                    onChange={handleChange}
+                  />
+                  <Typography
+                    color="textSecondary"
+                    variant="body1"
+                  >
+                    I have read the
+                    {' '}
+                    <Link
+                      color="primary"
+                      component={RouterLink}
+                      to="#"
+                      underline="always"
+                      variant="h6"
+                    >
+                      Terms and Conditions
+                    </Link>
+                  </Typography>
+                </Box>
+                {Boolean(touched.policy && errors.policy) && (
+                  <FormHelperText error>
+                    {errors.policy}
+                  </FormHelperText>
+                )}
+                <Box sx={{ py: 2 }}>
+                  <Button
+                    color="primary"
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                    onClick={handleSubmit}
+                  >
+                    Register
+                  </Button>
+                </Box>
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
+                >
+                  Have an account?
+                  {' '}
+                  <Link
+                    component={RouterLink}
+                    to="/login"
+                    variant="h6"
+                  >
+                    Login
+                  </Link>
+                </Typography>
+              </form>
+    
+        </Container>
+      </Box>
+    </>
+  );
+};
 
-export default Register
-
+export default Register;
