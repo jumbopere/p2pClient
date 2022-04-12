@@ -1,22 +1,46 @@
-
-
 import React, {useState} from 'react';
-import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
-import {  Button, Container, Typography, Box, TextField, Link, FormControl,Checkbox, InputAdornment, IconButton, MenuItem, Select,  InputLabel } from "@mui/material"
+import { useDispatch } from 'react-redux';
+
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {  Button, Container, Typography, Box, TextField, Link, FormControl,Checkbox, InputAdornment, IconButton, MenuItem, Select, FormHelperText,   InputLabel } from "@mui/material"
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useFormik } from 'formik';
 import { Helmet } from 'react-helmet';
+import * as yup from "yup"
 
-import { validationSchema } from './Formik';
 import stateData from '../../stateData';
+import { register } from '../../actions/user';
+
+
+ const validationSchema = yup.object({
+  firstName: yup.string('Enter your first name').max(10, "First name shouldn't be more than 10 characters").required("First name is required"),
+  lastName: yup.string('Enter your last name').max(10, "Last name shouldn't be more than 10 characters").required("Last name is required"),
+  address: yup.string('Enter your address').required("Address is required"),
+  city: yup.string('Enter your city').required("City is required"),
+  state: yup.string('Enter your State').required("State is required"),
+  gender: yup.string('Choose your Gender').required("Gender is required"),
+ email: yup
+   .string('Enter your email')
+   .email('Enter a valid email')
+   .required('Email is required'),
+ password: yup
+   .string('Enter your password')
+   .min(8, 'Password should be of minimum 8 characters length')
+   .required('Password is required'),
+   confirmPassword: yup.string().oneOf(
+     [yup.ref("password"), null],
+     "Passwords must match"
+   ),
+   // activationCode: yup.string('Enter your Activation code').required("Activation code is required"),
+   policy: yup.boolean().oneOf([true], 'This field must be checked')
+});
 
 const Register = () => {
-
-
-
     const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => setShowPassword(!showPassword);
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
@@ -36,6 +60,8 @@ const Register = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       const {firstName, lastName, email, password, state, city, address, gender,phoneNumber} = values
+dispatch(register({firstName,lastName, email, password, state, city, address, gender, phoneNumber}, navigate))
+console.log('values', values)
     },
   });
 
@@ -53,7 +79,7 @@ const Register = () => {
           justifyContent: 'center'
         }}
       >
-        <Container maxWidth="xs">
+        <Container maxWidth="sm">
 
     
               <form onSubmit={handleSubmit}>
@@ -226,7 +252,9 @@ const Register = () => {
                   name="password"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  type="password"
+                  type={
+                    showPassword ? "text" : "password"
+                }
                   autoComplete='current-password'
                   value={values.password}
                   variant="outlined"
@@ -299,7 +327,7 @@ const Register = () => {
                     size="large"
                     type="submit"
                     variant="contained"
-                    onClick={handleSubmit}
+                    
                   >
                     Register
                   </Button>
@@ -312,7 +340,7 @@ const Register = () => {
                   {' '}
                   <Link
                     component={RouterLink}
-                    to="/login"
+                    to="/"
                     variant="h6"
                   >
                     Login

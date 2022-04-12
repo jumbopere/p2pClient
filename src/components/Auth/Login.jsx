@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import {useDispatch} from 'react-redux'
 import { Helmet } from 'react-helmet';
@@ -12,11 +13,23 @@ import {
   InputAdornment,
   IconButton
 } from '@mui/material';
-
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import * as yup from 'yup'
 
-import { validationSchema } from './Formik';
+
+
+ const validationSchema = yup.object({
+ email: yup
+   .string('Enter your email')
+   .email('Enter a valid email')
+   .required('Email is required'),
+ password: yup
+   .string('Enter your password')
+   .min(8, 'Password should be of minimum 8 characters length')
+   .required('Password is required'),
+
+});
 
 
 const Login = () => {
@@ -34,7 +47,7 @@ const Login = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      const { email, password, } = values
+     console.log(values)
     },
   });
 

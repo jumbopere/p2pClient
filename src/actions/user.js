@@ -7,12 +7,13 @@ export const register = (values, navigate) => async (dispatch) => {
       
       dispatch({ type: REGISTER, data });
   
-      navigate.push('/verify');
+      navigate.push('/activate');
     } catch (err) {
-        dispatch({
-            type: USER_SIGNUP_ERRORS,
-            payload: err.response.data,
-          });
+        // dispatch({
+        //     type: USER_SIGNUP_ERRORS,
+        //     payload: err.response.data,
+        //   });
+        console.log(err)
     }
   };
 

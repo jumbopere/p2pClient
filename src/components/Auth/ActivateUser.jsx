@@ -10,13 +10,16 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import * as yup from 'yup'
 
-import { validationSchema } from './Formik';
+const validationSchema = yup.object({
+     activationCode: yup.string('Enter your Activation code').required("Activation code is required"),
+ });
 
 const ActivateUser = () => {
     const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
         initialValues: {
-            activationCode
+            activationCode:""
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -70,7 +73,8 @@ const ActivateUser = () => {
                 helperText={touched.activationCode && errors.activationCode}
                 label="Activation Code"
                 margin="normal"
-                name="activate"
+                name="activationCode"
+                id='activate'
                 onBlur={handleBlur}
                 onChange={handleChange}
                 type="text"

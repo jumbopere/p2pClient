@@ -1,4 +1,4 @@
-import { Login, Register, } from './components';
+import { Login, Register, MainLayout, Layout, ActivateUser, NotFound} from './components';
 import { Navigate } from 'react-router-dom';
 
 const routes = (user) => [
@@ -13,7 +13,7 @@ const routes = (user) => [
     },
     {
       path: '/',
-      element: !user ? <MainLayout /> : <Navigate to="/home" />,
+       element: <MainLayout />,
       children: [
         { path: 'login', element: <Login /> },
         // { path: 'home', element: <Home /> },

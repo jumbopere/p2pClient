@@ -17,9 +17,7 @@ const Navbar = () => {
     }
   return (
     <AppBar className={classes.appBar} position="absolute" >
-     <Toolbar className={classes.toolbar}>
-         h1
-     </Toolbar> 
+  
      
         <div className={classes.appBrand} >
             <div className={classes.leftDiv}>
@@ -44,13 +42,13 @@ Transactions
 
 </div>
 <Box className={classes.div2}  display={{xs:"flex", md:"none"}}>
-<Button className={classes.button} onClick={() => setIsOpen((isOpen) => !isOpen)} type="button" aria-expanded="false" aria-controls='mobile-menu'>
+<Button className={classes.button} onClick={handleClick} type="button" aria-expanded="false" aria-controls='mobile-menu'>
     {
         !isOpen ? (
-<MenuIcon className={classes.menuIcon}  aria-hidden="true"/>
+<MenuIcon className={classes.menuIcon}  aria-hidden="true" viewBox='0 0 24 24' />
         ):
         (
-            <CloseIcon className={classes.menuIcon} aria-hidden="true"/>
+            <CloseIcon className={classes.menuIcon} aria-hidden="true"  viewBox='0 0 24 24'/>
         )
     }
 
