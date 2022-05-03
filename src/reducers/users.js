@@ -1,20 +1,26 @@
-import { LOGIN, REGISTER, LOGOUT, USER_SIGNUP_ERRORS, ACTIVATE} from "../constants";
+import { LOGIN, REGISTER, LOGOUT, USER_REGISTER_ERRORS, ACTIVATE, USER_LOGIN_ERRORS, USER_ACTIVATION_ERRORS} from "../constants";
 
 
-const authReducer =(state ={ userData: null, errors:{}}, action)=> {
+const authReducer =(state ={userData: null, errors:{} }, action)=> {
     switch(action.type){
         case LOGIN:
             localStorage.setItem('profile', JSON.stringify({...action?.data}))
-            return { ...state, userData: action.data, loading: false, errors: null };
+            return { ...state, userData: action.data,  };
 
 case LOGOUT:
     localStorage.clear();
     return { ...state, userData: null, loading: false, errors: null };
-case USER_SIGNUP_ERRORS:
+case USER_REGISTER_ERRORS:
     return {errors: {...action.payload }}
+case USER_ACTIVATION_ERRORS:
+    return {errors: {...action.payload }}
+case USER_LOGIN_ERRORS:
+    return {errors: {...action.payload }}
+
+    case REGISTER:
+        return { ...state, userData: action.data}
     case ACTIVATE:
-        localStorage.setItem('profile', JSON.stringify({...action?.data}))
-        return { ...state, userData: action.data, loading: false, errors: null };
+        return { ...state, userData: action.data,  errors: action.payload };
 default:
     return state
     }

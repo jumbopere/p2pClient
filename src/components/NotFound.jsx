@@ -4,11 +4,12 @@ import {
   Container,
   Typography
 } from '@mui/material';
+import Notfound from '../images/not_found.png'
 
 const NotFound = () => (
   <>
     <Helmet>
-      <title>404 | JuJo Foods</title>
+      <title>404 </title>
     </Helmet>
     <Box
       sx={{
@@ -38,7 +39,7 @@ const NotFound = () => (
         <Box sx={{ textAlign: 'center' }}>
           <img
             alt="Under development"
-            src="/static/images/undraw_page_not_found_su7k.svg"
+            src={Notfound}
             style={{
               marginTop: 50,
               display: 'inline-block',

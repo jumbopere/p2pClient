@@ -12,18 +12,23 @@ import {
 } from '@mui/material';
 import * as yup from 'yup'
 
+import { activateUser } from '../../actions/user';
+
 const validationSchema = yup.object({
      activationCode: yup.string('Enter your Activation code').required("Activation code is required"),
  });
 
 const ActivateUser = () => {
+const dispatch = useDispatch();
+const navigate = useNavigate()
+
     const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
         initialValues: {
             activationCode:""
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-          const {activationCode} = values
+          dispatch(activateUser(values, navigate))
         },
       });
   return (
@@ -63,7 +68,7 @@ const ActivateUser = () => {
                   color="textSecondary"
                   variant="body1"
                 >
-                  Enter your Activation Code
+                  Check your email for Activation Code
                 </Typography>
               </Box>
               <TextField

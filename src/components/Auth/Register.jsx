@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { useDispatch } from 'react-redux';
+import React, {useState, useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {  Button, Container, Typography, Box, TextField, Link, FormControl,Checkbox, InputAdornment, IconButton, MenuItem, Select, FormHelperText,   InputLabel } from "@mui/material"
@@ -10,22 +10,27 @@ import { Helmet } from 'react-helmet';
 import * as yup from "yup"
 
 import stateData from '../../stateData';
-import { register } from '../../actions/user';
+import { registerUser } from '../../actions/user';
 
+
+
+
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
  const validationSchema = yup.object({
-  firstName: yup.string('Enter your first name').max(10, "First name shouldn't be more than 10 characters").required("First name is required"),
-  lastName: yup.string('Enter your last name').max(10, "Last name shouldn't be more than 10 characters").required("Last name is required"),
-  address: yup.string('Enter your address').required("Address is required"),
-  city: yup.string('Enter your city').required("City is required"),
+  firstName: yup.string('Enter your First Name').max(10, "First Name shouldn't be more than 10 characters").required("First Name is required"),
+  lastName: yup.string('Enter your Last Name').max(10, "Last Name shouldn't be more than 10 characters").required("Last Name is required"),
+  address: yup.string('Enter your Address').required("Address is required"),
+  city: yup.string('Enter your City').required("City is required"),
   state: yup.string('Enter your State').required("State is required"),
   gender: yup.string('Choose your Gender').required("Gender is required"),
+  phoneNumber:yup.string('Enter your Phone Number').required('Phone Number is required').matches(phoneRegExp, 'Phone Number is not valid'),
  email: yup
    .string('Enter your email')
    .email('Enter a valid email')
    .required('Email is required'),
  password: yup
-   .string('Enter your password')
+   .string('Enter your Password')
    .min(8, 'Password should be of minimum 8 characters length')
    .required('Password is required'),
    confirmPassword: yup.string().oneOf(
@@ -39,8 +44,19 @@ import { register } from '../../actions/user';
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => setShowPassword(!showPassword);
+  const [loading, setLoading] = useState(false);
+  
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const {errors: error }= useSelector((state)=> state.authReducer);
+  useEffect(()=> {
+    if(error.error) {
+      setLoading(!loading)
+    }
+    console.log(error.error)
+  }, [error])
+
 
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
@@ -59,9 +75,10 @@ const Register = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
+      setLoading(!loading);
       const {firstName, lastName, email, password, state, city, address, gender,phoneNumber} = values
-dispatch(register({firstName,lastName, email, password, state, city, address, gender, phoneNumber}, navigate))
-console.log('values', values)
+dispatch(registerUser({firstName,lastName, email, password, state, city, address, gender, phoneNumber}, navigate))
+console.log('values')
     },
   });
 
@@ -111,6 +128,7 @@ console.log('values', values)
                   value={values.firstName}
                   variant="outlined"
                   autoComplete='firstname'
+                 
                 />
                 <TextField
                   error={Boolean(touched.lastName && errors.lastName)}
@@ -125,7 +143,7 @@ console.log('values', values)
                   variant="outlined"
                   required
                   autoComplete='lastname'
-                 
+              
                 />
                 <TextField
                   error={Boolean(touched.email && errors.email)}
@@ -314,6 +332,7 @@ console.log('values', values)
                       Terms and Conditions
                     </Link>
                   </Typography>
+                
                 </Box>
                 {Boolean(touched.policy && errors.policy) && (
                   <FormHelperText error>
@@ -321,6 +340,7 @@ console.log('values', values)
                   </FormHelperText>
                 )}
                 <Box sx={{ py: 2 }}>
+                {error?.error && <span style={{color: 'red', fontSize: '12px', marginBottom: '10px', display: 'block'}}>{error.error}</span>}
                   <Button
                     color="primary"
                     fullWidth
@@ -329,7 +349,7 @@ console.log('values', values)
                     variant="contained"
                     
                   >
-                    Register
+                    Sign{loading ? "ing" : ""} up
                   </Button>
                 </Box>
                 <Typography
